@@ -6,5 +6,5 @@ Mini Proyecto dedicado a la evaluacion del primer parcial de Tecnologias Web, co
 * JavaScript
 * HTML
 
->**CAUTION**
-Este proyecto no incluye un bakend unicamente un frontend, por lo que la seguridad del proyecto es limitada.
+> **Warning**
+Your warning text here
