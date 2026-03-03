@@ -6,5 +6,5 @@ Mini Proyecto dedicado a la evaluacion del primer parcial de Tecnologias Web, co
 * JavaScript
 * HTML
 
-> **Warning**
-Your warning text here
+>[!CAUTION]
+>Your warning text here
