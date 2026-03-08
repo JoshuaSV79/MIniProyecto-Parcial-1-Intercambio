@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Swapify - Intercambio de Regalos</title>
   <link rel="shortcut icon" href="./Img/icon.jpg" />
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
   <link rel="stylesheet" href="./CSS/styles.css">
 </head>
 <body class="bg-slate-50">
@@ -25,44 +23,46 @@
 
   <main class="container">
     <div class="row g-5 align-items-start">
-      
-      <div class="col-12 col-lg-7">
-        
+
+      <div class="col-12 col-md-8 col-lg-7">
+
+        <!-- PASO 0: Inicio -->
         <section id="inicio" class="step-card">
           <h1 class="text-3xl font-bold mb-2">¡Comienza tu intercambio!</h1>
           <p class="text-gray-600 mb-6">Configura tu sorteo de forma rápida y sencilla.</p>
           <button id="btnEmpezar" class="btn btn-primary px-5 py-2">Empezar</button>
         </section>
 
-        <section id="organizador" class="step-card d-none">
+        <!-- PASO 1: Organizador -->
+        <section id="organizador" class="step-card oculto">
           <h2 class="text-xl font-semibold mb-4">¿Quién organiza el intercambio?</h2>
           <input type="text" id="nombreOrg" placeholder="Tu nombre" class="form-control mb-3">
           <div class="form-check form-switch mb-4">
             <input class="form-check-input" type="checkbox" id="incluirOrg" checked>
             <label class="form-check-label" for="incluirOrg">Incluirme en el intercambio</label>
           </div>
-          <button class="btn btn-primary w-full" onclick="siguienteStep('participantes')">Continuar</button>
+          <button id="btnIrParticipantes" class="btn btn-primary w-100">Continuar</button>
         </section>
 
-        <section id="participantes" class="step-card d-none">
+        <!-- PASO 2: Participantes -->
+        <section id="participantes" class="step-card oculto">
           <h2 class="text-xl font-semibold mb-2">Añadir Participantes</h2>
-          <p class="text-sm text-gray-500 mb-4">No hay límite de nombres para el intercambio.</p>
+          <p id="contadorPart" class="text-sm text-gray-500 mb-4">0 participante(s). No hay límite.</p>
           <div class="input-group mb-3">
             <input type="text" id="inputNombre" class="form-control" placeholder="Nombre del participante">
             <button class="btn btn-success" id="btnAñadir">Añadir</button>
           </div>
-          <ul id="listaParticipantes" class="list-group list-group-flush mb-4 max-h-60 overflow-y-auto">
-            </ul>
-          <button class="btn btn-primary w-full" onclick="siguienteStep('exclusiones')">Establecer Exclusiones</button>
+          <ul id="listaParticipantes" class="list-group list-group-flush mb-4" style="max-height:240px; overflow-y:auto;"></ul>
+          <button id="btnIrExclusiones" class="btn btn-primary w-100">Establecer Exclusiones</button>
         </section>
 
-        <section id="exclusiones" class="step-card d-none">
+        <!-- PASO 3: Exclusiones (Drag and Drop) -->
+        <section id="exclusiones" class="step-card oculto">
           <h2 class="text-xl font-semibold mb-2">Exclusiones del Sorteo</h2>
           <p class="text-sm text-gray-500 mb-4">Arrastra un nombre al buzón para evitar que se regalen entre sí.</p>
           <div class="row">
             <div class="col-6">
-              <div id="listaArrastre" class="flex flex-wrap gap-2">
-                </div>
+              <div id="listaArrastre" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
             </div>
             <div class="col-6">
               <div id="zonaExclusion" class="drop-zone border-2 border-dashed border-blue-300 rounded-lg p-4 text-center text-blue-400">
@@ -70,54 +70,68 @@
               </div>
             </div>
           </div>
-          <button class="btn btn-primary w-full mt-4" onclick="siguienteStep('detalles')">Configurar Evento</button>
+          <div id="listaExclActuales" class="mt-3"></div>
+          <button id="btnIrDetalles" class="btn btn-primary w-100 mt-4">Configurar Evento</button>
         </section>
 
-        <section id="detalles" class="step-card d-none">
+        <!-- PASO 4: Detalles del evento -->
+        <section id="detalles" class="step-card oculto">
           <h2 class="text-xl font-semibold mb-4">¿Para qué es el intercambio?</h2>
-          <div class="grid grid-cols-2 gap-2 mb-4">
-            <button class="btn btn-outline-primary btn-sm">Navidad</button>
-            <button class="btn btn-outline-primary btn-sm">Día del Niño</button>
-            <button class="btn btn-outline-primary btn-sm">Dia de Muertos</button>
-            <button class="btn btn-outline-primary btn-sm">San Valentin</button>
-            <button class="btn btn-outline-primary btn-sm" onclick="mostrarInputOtro()">Otro</button>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
+            <button class="btn btn-outline-primary btn-sm btn-evento">Navidad</button>
+            <button class="btn btn-outline-primary btn-sm btn-evento">Día del Niño</button>
+            <button class="btn btn-outline-primary btn-sm btn-evento">Dia de Muertos</button>
+            <button class="btn btn-outline-primary btn-sm btn-evento">San Valentin</button>
+            <button class="btn btn-outline-primary btn-sm" id="btnOtroEvento">Otro</button>
           </div>
-          <input type="text" id="nombreEvento" placeholder="Nombre de la celebración" class="form-control mb-3 d-none">
-          <label class="block text-sm font-medium mb-1">Fecha de celebración:</label>
+          <input type="text" id="nombreEvento" placeholder="Nombre de la celebración" class="form-control mb-3 oculto">
+
+          <label class="form-label fw-medium mb-1">Fecha de celebración:</label>
+          <div id="fechasSugeridas" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;"></div>
           <input type="date" id="fechaEvento" class="form-control mb-4">
-          
+
           <h2 class="text-xl font-semibold mb-3">Presupuesto ($)</h2>
-          <div class="flex gap-2 mb-3">
-            <button class="btn btn-outline-dark">$100</button>
-            <button class="btn btn-outline-dark">$200</button>
-            <button class="btn btn-outline-dark">$300</button>
-            <button class="btn btn-outline-dark">$400</button>
-            <input type="number" id="otroMonto" placeholder="Otro" class="form-control w-24">
+          <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+            <button class="btn btn-outline-dark btn-pres">$100</button>
+            <button class="btn btn-outline-dark btn-pres">$200</button>
+            <button class="btn btn-outline-dark btn-pres">$300</button>
+            <button class="btn btn-outline-dark btn-pres">$400</button>
+            <input type="number" id="otroMonto" placeholder="Otro" class="form-control" style="width:100px;">
           </div>
-          <button class="btn btn-primary w-full mt-4" onclick="realizarSorteo()">¡Realizar Sorteo!</button>
+          <button id="btnRealizarSorteo" class="btn btn-primary w-100 mt-4">¡Continuar!</button>
         </section>
 
-        <section id="resultados" class="step-card d-none">
+        <!-- PASO 5: Opciones -->
+        <section id="opciones" class="step-card oculto">
+          <h2 class="text-2xl font-bold text-center mb-2">¡Todo listo!</h2>
+          <p class="text-center text-gray-500 mb-4">Elige una opción</p>
+          <div style="max-width:400px; margin:0 auto;">
+            <button id="btnVerDatos" class="btn btn-outline-primary w-100 py-3 mb-3" style="border-radius:14px;">📋 Ver datos del evento</button>
+            <button id="btnSortear" class="btn btn-primary w-100 py-3" style="border-radius:14px; font-size:1.1rem;">🎲 ¡Realizar Sorteo!</button>
+          </div>
+        </section>
+
+        <!-- PASO 6: Resultados -->
+        <section id="resultados" class="step-card oculto">
           <h2 class="text-2xl font-bold text-center mb-4">Resultados</h2>
-          <div id="resumenEvento" class="bg-blue-50 p-4 rounded-lg mb-4 text-sm">
-            </div>
-          <div id="listaSorteo" class="space-y-2">
-            </div>
+          <div id="resumenEvento" class="p-4 rounded-lg mb-4 text-sm" style="background:#eff6ff;"></div>
+          <div id="listaSorteo"></div>
         </section>
 
       </div>
 
-      <div class="d-none d-lg-block col-lg-5 sticky-top py-5">
-        <img src="https://png.pngtree.com/png-vector/20241204/ourmid/pngtree-festive-shopping-scene-with-gift-exchange-png-image_14571263.png" 
-             alt="Regalos" class="w-full h-auto drop-shadow-xl transform hover:scale-105 transition-transform duration-500">
+      <div class="d-none d-md-block col-md-4 col-lg-5 sticky-top py-5">
+        <img src="https://png.pngtree.com/png-vector/20241204/ourmid/pngtree-festive-shopping-scene-with-gift-exchange-png-image_14571263.png"
+             alt="Regalos" class="w-100" style="filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
       </div>
 
     </div>
   </main>
 
-  <footer class="bg-white border-t py-4 mt-20 text-center">
+  <footer class="bg-white border-top py-4 mt-5 text-center">
     <p class="text-gray-400 text-sm">© 2026 Swapify - Mini Proyecto #1<br>Joshua Veloz<br>Salvador Olivares</p>
   </footer>
 
+  <script src="./JS/app.js"></script>
 </body>
 </html>

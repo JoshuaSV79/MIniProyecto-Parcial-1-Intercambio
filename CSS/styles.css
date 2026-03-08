@@ -1,6 +1,11 @@
 /* Importación de fuente moderna */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
 
+/* ===== CLASE CLAVE: ocultar secciones (evita conflicto Bootstrap vs Tailwind) ===== */
+.oculto {
+    display: none !important;
+}
+
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: #1e293b;
@@ -13,15 +18,13 @@ body {
     border-radius: 20px;
     padding: 2.5rem;
     border: 1px solid #f1f5f9;
-    /* Sombra suave solo en el contenedor, no en el texto */
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     margin-bottom: 2rem;
     transition: transform 0.3s ease;
 }
 
-/* Se quitó el shadow de las letras que mencionaste */
 .step-card h1, .step-card h2, .step-card p {
-    text-shadow: none !important; 
+    text-shadow: none !important;
     letter-spacing: -0.02em;
 }
 
@@ -65,16 +68,27 @@ body {
     font-size: 0.875rem;
     border: 1px solid #e2e8f0;
     user-select: none;
+    transition: opacity 0.2s ease;
 }
 
 .chip-draggable:active {
     cursor: grabbing;
 }
 
-/* Responsive Grid Adjustments */
-@media (max-width: 991px) {
+/* Responsive Grid - 2 breakpoints: md y lg (Bootstrap grid) */
+@media (max-width: 767px) {
     .step-card {
-        padding: 1.5rem;
+        padding: 1.2rem;
+        margin-bottom: 0.8rem;
+        border-radius: 14px;
+    }
+    .step-card h1 { font-size: 1.5rem; }
+    .step-card h2 { font-size: 1.1rem; }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .step-card {
+        padding: 1.8rem;
         margin-bottom: 1rem;
     }
 }
